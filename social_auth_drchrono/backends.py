@@ -15,7 +15,7 @@ class drchronoOAuth2(BaseOAuth2):
     USER_DATA_URL = 'https://drchrono.com/api/users/current'
     EXTRA_DATA = [
         ('refresh_token', 'refresh_token'),
-        ('expires_in', 'expires_in')
+        ('expires_in', 'expires')
     ]
     # TODO: setup proper token refreshing
 
