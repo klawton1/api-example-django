@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -26,6 +25,21 @@ SOCIAL_AUTH_DRCHRONO_KEY = 'NmZAUAMVtnqaDjjPyrPksvUVxe85GBoVAt4HwV03'
 SOCIAL_AUTH_DRCHRONO_SECRET = 'P93LAnRrHv5kvqmj9CpAlxiPfMdHyA8p40acajsGBwNQkQ245XAAXmCIvm7EWr9DIXOge9k7nrQZLS1qfdzbU718fcpSh8ZMYWn0YvsawPGAVCs4KcpslozvOH6CN4Cd'
 SOCIAL_AUTH_DRCHRONO_SCOPE = []
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
+
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    # Create Profile if new user
+    'drchrono.pipeline.create_profile',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

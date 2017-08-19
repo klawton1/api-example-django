@@ -21,3 +21,6 @@ class Profile(models.Model):
 
   def social(self):
     return self.user.social_auth.first()
+
+  def __str__(self):
+    return self.user.username
