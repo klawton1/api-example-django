@@ -22,6 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '=*l&a&rk7jmiw$3euke*z9lu-na!^j^i&ddejfik!ajqlaymmc'
 
+SOCIAL_AUTH_DRCHRONO_KEY = 'NmZAUAMVtnqaDjjPyrPksvUVxe85GBoVAt4HwV03'
+SOCIAL_AUTH_DRCHRONO_SECRET = 'P93LAnRrHv5kvqmj9CpAlxiPfMdHyA8p40acajsGBwNQkQ245XAAXmCIvm7EWr9DIXOge9k7nrQZLS1qfdzbU718fcpSh8ZMYWn0YvsawPGAVCs4KcpslozvOH6CN4Cd'
+SOCIAL_AUTH_DRCHRONO_SCOPE = []
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -38,7 +43,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drchrono',
-    'social.apps.django_app.default',
+    'social_django',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -70,8 +76,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social.apps.django_app.context_processors.backends',
-                'social.apps.django_app.context_processors.login_redirect',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },

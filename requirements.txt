@@ -1,9 +1,12 @@
-Django==1.8.3
+Django==1.11
+django-bootstrap3==9.0.0
+django-social-auth==0.7.28
+social-auth-app-django==1.2.0
 oauth==1.0.1
 oauth2==1.5.211
 oauth2client==1.4.12
 oauthlib==2.0.0
-python-social-auth==0.2.12
+python-social-auth==0.3.6
 requests==2.11.1
 requests-oauth2==0.2.0
 requests-oauthlib==0.5.0
