@@ -1,11 +1,9 @@
 from django.conf.urls import include, url
-from django.views.generic import TemplateView
-
 import views
 
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
-
+    url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^logout/$', views.logout_user, name='logout'),
     url(r'', include('social_django.urls', namespace='social')),
 ]
