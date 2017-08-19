@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
+from social_django.utils import load_strategy
+
+import datetime, requests
 
 class ArrivedPatient(models.Model):
   first_name = models.CharField(max_length=200)
@@ -19,8 +21,21 @@ class Profile(models.Model):
   is_doctor = models.BooleanField(default=False)
   doctor_id = models.IntegerField(null=False, blank=False)
 
+  def __str__(self):
+    return self.user.username
+
   def social(self):
     return self.user.social_auth.first()
 
-  def __str__(self):
-    return self.user.username
+  def patients(self):
+    social = self.social()
+    # Access Token for Current User
+    headers = {'Authorization': 'Bearer {}'.format(social.get_access_token(load_strategy()))}
+    patients = []
+    patients_url = 'https://drchrono.com/api/patients'
+    while patients_url:
+      response = requests.get(patients_url, headers=headers)
+      data = response.json()
+      patients.extend(data['results'])
+      patients_url = data['next'] # A JSON null on the last page
+    return patients
