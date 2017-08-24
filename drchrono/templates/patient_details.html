@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% load bootstrap3 %}
+{% block content %}
+  <h2 class="text-center">Welcome {{patient.first_name}}</h2>
+  <br>
+  {% if appointment %}
+    <p>We have you scheduled for a {{appointment.scheduled_time|date:"P"}} Appointment with Dr. {{doctor.last_name}}</p>  
+  {% else %}
+    <p>We couldn't find an appointment for you today. Would you like to meet with your doctor?</p>
+    <br>
+    <div class="appointment-choices text-center">
+      <button id="walk-in" class="btn btn-primary">New Appointment</button>
+      <a href="{% url 'checkin' %}"><button class="btn btn-primary">Back</button></a>      
+    </div>
+  {% endif %}
+  <br>
+  <form action="{% url 'checkin-complete' %}" method="post" class="col-md-offset-2 col-md-8" {%if not appointment%}hidden{%endif%}>
+    {% csrf_token %}
+    {% if appointment %}
+      <h4 class="text-center">Please confirm the information below is correct</h4>
+      {% bootstrap_form form exclude='reason'%}
+      <input type="text" name="appointment_id" value="{{appointment.id}}" hidden>
+      <input type="text" name="doctor_id" value="{{doctor.id}}" hidden>
+    {% else %}
+      {% bootstrap_field form.reason %}
+      <h4 class="text-center">Please confirm the information below is correct</h4>
+      {% bootstrap_form form exclude='reason'%}
+
+    {% endif %}
+    <input type="text" name="patient_id" value="{{patient.id}}" hidden>
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <a href="{% url 'checkin' %}"><div class="btn btn-primary">Cancel</div></a>
+    {% endbuttons %}
+  </form>
+{% endblock content %}

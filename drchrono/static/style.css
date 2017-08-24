@@ -1,0 +1,42 @@
+.dash {
+  display: inline-block;
+  background: black;
+  border-radius: 5px;
+  width: 10px;
+  height: 2px;
+}
+.col-xs-1.text-center {
+  padding: 0px;
+  width: 1%;
+}
+.ssn {
+  min-width: 75px;
+  max-width: 100px;
+}
+.ssn2 {
+  min-width: 50px;
+  max-width: 75px;
+}
+.container {
+  background-color: lightblue;
+  border-radius: 20px;
+  margin-top: 80px;
+}
+p, .messages {
+  text-align: center;
+  font-size: 18px;
+}
+.navbar.navbar-default {
+  margin-bottom: 0px;
+}
+.navbar.messages {
+  font-weight: bold;
+  position: absolute;
+  width: 100%;
+}
+.messages.success {
+  background-color: limegreen
+}
+.messages.warning {
+  background-color: orangered
+}
