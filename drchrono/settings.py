@@ -24,7 +24,7 @@ SECRET_KEY = '=*l&a&rk7jmiw$3euke*z9lu-na!^j^i&ddejfik!ajqlaymmc'
 SOCIAL_AUTH_DRCHRONO_KEY = 'NmZAUAMVtnqaDjjPyrPksvUVxe85GBoVAt4HwV03'
 SOCIAL_AUTH_DRCHRONO_SECRET = 'P93LAnRrHv5kvqmj9CpAlxiPfMdHyA8p40acajsGBwNQkQ245XAAXmCIvm7EWr9DIXOge9k7nrQZLS1qfdzbU718fcpSh8ZMYWn0YvsawPGAVCs4KcpslozvOH6CN4Cd'
 SOCIAL_AUTH_DRCHRONO_SCOPE = []
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/checkin'
 
 
 SOCIAL_AUTH_PIPELINE = (
@@ -98,7 +98,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'drchrono.wsgi.application'
-
+LOGIN_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -128,4 +128,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/drchrono/static/'
