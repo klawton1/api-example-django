@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2 class="text-center">Today's Appointments</h2>
+  <p class="text-center">average wait time: {{avg_wait}} minutes </p>
+  <hr>
+  {% for appointment in appointments %}
+    {% if appointment.status not in status %} 
+      <div class="row appointment" id="{{appointment.id}}">
+        <div class="col-xs-6">
+          <p><span class="s-label pull-left">Scheduled Time: </span>{{appointment.scheduled_time|date:"P"}}</p>
+          <p><span class="s-label pull-left">Reason For Visit: </span>{{appointment.reason}}</p>
+        </div>
+        <div class="col-xs-6 status">
+          {% if appointment.status == 'Arrived' %}
+            {% for patient in arrived %}
+              {% if patient.appointment_id == appointment.id %}
+                <p> {{patient.first_name}} {{patient.last_name}} arrived {{patient.created_at|timesince}} </p>
+                <form class="appointment-form" method="POST" action="/appointments/update">
+                  {% csrf_token %}
+                  <input type="text" name="appointment_id" value="{{appointment.id}}" hidden>
+                  <input type="text" name="status" value="In Room" hidden>
+                  <button type="submit" class="btn btn-primary see-patient center-block">See Patient</button>
+                </form>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <form class="appointment-form" method="POST" action="/appointments/update">
+              <div class="row">
+                <p class="col-xs-3">status:</p>
+                <div class="col-xs-9">
+                  {% csrf_token %}
+                  <input type="text" name="appointment_id" value="{{appointment.id}}" hidden>
+                  <select class="form-control select-status" name="status">
+                    <option>{{appointment.status}}</option>
+                    {% for s in status %}
+                      <option>{{s}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock content %}

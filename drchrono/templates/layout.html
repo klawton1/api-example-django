@@ -14,13 +14,10 @@
   {% block nav %}
     <nav class="navbar navbar-default">
       <ul class="nav navbar-nav">
-        <li><a href="{% url 'home' %}">Home</a></li>
       {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}">Logout</a></li>
         <li><a href="{% url 'checkin' %}">Check In</a></li>
-        {% if user.profile.is_doctor %}
-          <li><a href="/patients">Appointments</a></li>
-        {% endif %}
+        <li><a href="{% url 'appointments' %}">Appointments</a></li>
       {% else %}
         <li><a href="{% url 'social:begin' 'drchrono' %}">Login</a></li>
       {% endif %}

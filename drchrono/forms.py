@@ -17,4 +17,4 @@ class PatientInfo(forms.Form):
   cell_phone = forms.CharField(required=False)
   address = forms.CharField(required=False)
   zip_code = forms.CharField(required=False, widget=forms.TextInput(attrs={'maxlength':'5', 'pattern':'[0-9]{5}'}))
-  date_of_birth = forms.DateField(required=False, widget=forms.SelectDateWidget(years=range(1900, datetime.datetime.now().year)))
+  date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=range(1900, datetime.datetime.now().year)))

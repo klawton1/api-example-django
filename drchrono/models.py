@@ -2,12 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from social_django.utils import load_strategy
 
-import datetime, requests
+import datetime, requests, pytz
 
 class ArrivedPatient(models.Model):
   first_name = models.CharField(max_length=200)
   last_name = models.CharField(max_length=200)
-  created_at = models.DateField(auto_now_add=True)
+  created_at = models.DateTimeField(auto_now_add=True)
   patient_id = models.IntegerField(null=False, blank=False)
   doctor_id = models.IntegerField(null=False, blank=False)
   appointment_id = models.CharField(max_length=200, unique=True)
@@ -74,10 +74,11 @@ class Profile(models.Model):
     appointment_url = 'https://drchrono.com/api/appointments/{}'.format(appointment_id)
     response = requests.patch(appointment_url, headers=headers, data=appointment_data)
     return response
+
   def get_appointments(self, patient_id=None, doctor_id=None):
     headers = self.access_header()
     appointments_url = 'https://drchrono.com/api/appointments'
-    params = {'date': datetime.date.today()}
+    params = {'date': datetime.datetime.now(pytz.timezone('US/Pacific')).date()}
     if patient_id:
       params['patient'] = patient_id
     appointments = []

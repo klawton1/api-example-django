@@ -30,7 +30,7 @@
     <input type="text" name="doctor_id" value="{{patient.doctor}}" hidden>
     <input type="text" name="patient_id" value="{{patient.id}}" hidden>
     {% buttons %}
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Check In</button>
       <a href="{% url 'checkin' %}"><div class="btn btn-primary">Cancel</div></a>
     {% endbuttons %}
   </form>

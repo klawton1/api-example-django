@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from .forms import NewPatient, PatientInfo
 from .models import ArrivedPatient
 
-import datetime, pdb
+import datetime, pytz, pdb
 
 class HomeView(generic.TemplateView):
   template_name = 'index.html'
@@ -89,20 +89,19 @@ def checkin_complete(request):
       'date_of_birth': date,
     }
     res = request.user.profile.update_patient(f.get('patient_id'), info)
+    #Check for successful patient update
     try:
       res.raise_for_status()
     except:
-      print("COULDN'T UPDATE!", res.text)
       messages.warning(request, "Could not update profile. ")
       return redirect('patient-details', patient_id=f.get('patient_id'))
-
-    #Not Working
     arrived_patient_info = {
       'first_name': f.get('first_name'),
       'last_name': f.get('last_name'),
       'patient_id': f.get('patient_id'),
       'doctor_id': f.get('doctor_id')
     }
+    # If this is a walk in appointment
     if f.get('reason'):
       appointment_info = {
         'reason': f.get('reason'),
@@ -117,9 +116,8 @@ def checkin_complete(request):
       }
       appointment = request.user.profile.create_appointment(appointment_info)
       arrived_patient_info['appointment_id'] = appointment['id']
-      #need to get appointment id
+      arrived_patient_info['walk_in'] = True
       ArrivedPatient.objects.create(**arrived_patient_info)
-      # pdb.set_trace()
       messages.success(request, 'Thanks {}! Your doctor will be with you shortly'.format(f.get('first_name')))
       return redirect('checkin')
     else:
@@ -129,7 +127,50 @@ def checkin_complete(request):
         messages.success(request, 'Thanks {}! Your doctor will be with you shortly'.format(f.get('first_name')))
       except:
         messages.success(request, 'Thanks {}! Your already checked in'.format(f.get('first_name')))
-        request.user.porfile.update_appointment(r.get('appointment_id'), {'status': 'Arrived'})
+      request.user.profile.update_appointment(f.get('appointment_id'), {'status': 'Arrived'})
       return redirect('checkin')
+
+class AppointmentsView(LoginRequiredMixin,generic.TemplateView):
+  template_name = "appointments.html"
+  def get_context_data(self, **kwargs):
+      context = super(AppointmentsView, self).get_context_data(**kwargs)
+      patients = ArrivedPatient.objects.filter(seen_by_doctor=False, no_show=False)
+      appointments = self.request.user.profile.get_appointments()
+      #change str of scheduled_time to datetime for template filter
+      for appointment in appointments: 
+        appointment['scheduled_time'] = datetime.datetime.strptime(appointment['scheduled_time'], "%Y-%m-%dT%H:%M:%S")
+      context['arrived'] = patients
+      context['appointments'] = appointments
+      patients_seen = ArrivedPatient.objects.filter(seen_by_doctor=True)
+      total_time = datetime.timedelta()
+      # Add time deltas for all patients who have had appointments
+      for patient in patients_seen: total_time += patient.time_waiting 
+      avg_wait = int(total_time.total_seconds() / len(patients_seen) / 60)
+      context['avg_wait'] = avg_wait
+      context['status'] = set(['Cancelled','Complete','No Show','Rescheduled'])
+      return context
+
+def update_appointment(request):
+  if request.method == "POST":
+    f = request.POST
+    status = f.get('status')
+    app_id = f.get('appointment_id')
+    appointment = ArrivedPatient.objects.filter(appointment_id=app_id, seen_by_doctor=False, no_show=False).first()
+    response = request.user.profile.update_appointment(app_id, {'status': status})
+    try:
+      response.raise_for_status()
+      messages.success(request, "Successfully updated appointment")
+    except:
+      messages.warning(request, "Error while updating appointment")
+    if appointment:
+      date = datetime.datetime.now(pytz.utc)
+      appointment.time_waiting = date - appointment.created_at
+      if status in ['Complete','In Room']:
+        appointment.seen_by_doctor = True
+      else:
+        appointment.no_show = True
+      appointment.save()
+    return redirect('appointments')
+      
 
 

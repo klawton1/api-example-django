@@ -5,6 +5,8 @@ import views
 urlpatterns = [
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^logout/$', views.logout_user, name='logout'),
+    url(r'^appointments/$', views.AppointmentsView.as_view(), name='appointments'),
+    url(r'^appointments/update$', views.update_appointment, name='update-appointment'),
     url(r'^checkin/$', views.CheckinView.as_view(), name='checkin'),
     url(r'^checkin/verify/$', views.checkin_verify, name='checkin-verify'),
     url(r'^checkin/complete/$',views.checkin_complete, name='checkin-complete'),
